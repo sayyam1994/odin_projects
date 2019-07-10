@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Function scope example</title>
+</head>
+<body>
+  <h1>
+    THE TITLE OF YOUR WEBPAGE
+  </h1>
+  <script>
+  const codeSet = code => (code < 97 ? 65 : 97);
+  const mod = (n, m) => (n % m + m) % m;
+   let string=prompt("enter a string");
+   let shift=prompt("enter an index");
+   let first=string.split("");
+   let second=first.map(function(char, shift){
+    const code = char.charCodeAt();
+
+if ((code >= 65 && code <= 90) || (code >= 97 && code <= 122)) {
+  return String.fromCharCode(
+    mod(code + shift - codeSet(code), 26) + codeSet(code)
+  );
+}
+return char;
+   });
+
+  
+   let third=second.join("");
+
+console.log(third);
+
+
+
+  
+
+  </script>
+</body>
+</html>

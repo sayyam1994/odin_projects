@@ -1,0 +1,116 @@
+<html>
+    <head>
+        <title>Rock Paper Scissors</title>
+        <script>
+            function computerPlay(){
+                let option = ["rock","paper","scissors"];
+                return option[Math.floor(Math.random() * 3)];
+            }
+
+            function winner(playerSelection,computerSelection){
+                let compScore,playerScore;
+
+                if (playerSelection == computerSelection) {
+                    console.log("its a tie");
+                    playerScore = 0;
+                    compScore = 0;
+                } 
+                else if (playerSelection == "rock") {
+                    if (computerSelection == "paper") {
+                        console.log("You lose! Paper beats Rock");
+                        compScore = 1;
+                        playerScore = 0;
+                    }
+                     else if (computerSelection == "scissors") {
+                        console.log("You win! Rock beats Scissors");
+                        playerScore = 1;
+                        compScore = 0;
+                    }
+                }
+                else if (playerSelection == "paper") {
+                    if (computerSelection == "scissors") {
+                        console.log("You lose! Scissors beats Paper");
+                        compScore = 1;
+                        playerScore = 0;
+                    }
+                     else if (computerSelection == "rock") {
+                        console.log("You win! Paper beats Rock");
+                        playerScore = 1;
+                        compScore = 0;
+                     }
+                }
+                else if (playerSelection == "scissors") {
+                    if (computerSelection == "rock") {
+                        console.log("You lose! Rock beats Scissors");
+                        compScore = 1;
+                        playerScore = 0;
+                    }
+                     else if (computerSelection == "paper") {
+                        console.log("You win! Scissors beats Paper");
+                        playerScore = 1;
+                        compScore = 0;
+                    }
+                }
+
+            return [compScore,playerScore];
+            }
+
+            function game(){
+                let i = 0;
+                let playerCounter = 0;
+                let compCounter = 0;
+                let drawCounter = 0;
+
+                while (i<5){
+                    
+                    let sel = prompt("enter your choice");
+                    let playerSelection = sel.toLowerCase();
+
+                    if (playerSelection == "rock" || playerSelection == "paper" || playerSelection == "scissors")
+                        {
+                            console.log("You Selected " + playerSelection);
+                        }
+                    else {
+                            console.log("Enter the correct choice"); 
+                        }
+
+                    let computerSelection = computerPlay();
+                    console.log("Computer Selected " + computerSelection);
+
+                    let [compScore,playerScore] = winner(playerSelection,computerSelection);
+                    if (compScore == 1) {
+                        compCounter++;
+                    } else if(playerScore == 1){
+                        playerCounter++;
+                    } else {
+                        drawCounter++;
+                    }
+                    i++;
+                }
+               
+                if (playerCounter>compCounter) {
+                    console.log("Hurray! You are the winner");
+                    console.log("Score:-")
+                    console.log("Your Score " + playerCounter + " Computer Score " + compCounter + " No of Draws " + drawCounter);
+
+                } else if (compCounter>playerCounter) {
+                    console.log("Oops! You are the looser");
+                    console.log("Score:-")
+                    console.log("Your Score " + playerCounter + " Computer Score " + compCounter + " No of Draws " + drawCounter); 
+                
+                } else if(playerCounter==compCounter) {
+                    console.log("Its a tie");
+                    console.log("Score:-")
+                    console.log("Your Score " + playerCounter + " Computer Score " + compCounter + " No of Draws " + drawCounter);
+                }
+
+            }
+
+            
+
+            
+            game();
+            
+        </script>
+    </head>
+</html>

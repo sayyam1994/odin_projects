@@ -1,0 +1,219 @@
+<html>
+    <head>
+        <title>Calculator</title>
+        <meta charset="utf-8"/>
+        <link href="style.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+            <div class="screen">
+                <h3></h3>
+                <h2>0</h2>
+            </div>
+            
+                <button id="clear" data-key="c">C</button>
+                <button id="delete" data-key="d">DEL</button>
+                <button id="divide" class="sign">÷</button>
+
+                <button id="seven" class="number" data-key="7">7</button>
+                <button id="eight" class="number" data-key="8">8</button>
+                <button id="nine" class="number" data-key="9">9</button>
+                <button id="multiply" class="sign" data-key="x">x</button>
+
+                <button id="four" class="number" data-key="4">4</button>
+                <button id="five" class="number" data-key="5">5</button>
+                <button id="six" class="number" data-key="6">6</button>
+                <button id="subtract" class="sign" data-key="-">-</button>
+
+                <button id="one" class="number" data-key="1">1</button>
+                <button id="two" class="number" data-key="2">2</button>
+                <button id="three" class="number" data-key="3">3</button>
+                <button id="add" class="sign" data-key="+">+</button>
+
+                <button id="zero" class="number" data-key="0">0</button>
+                <button id="decimal" class="decimal" data-key=".">.</button>
+                <button id="equal" data-key="=">=</button>
+            
+
+
+
+        <script>
+
+            function add(a,b){
+              result = (+a + +b);
+              return result;  
+            }
+
+            function subtract(a,b){
+              result = +a - +b;
+              return result;  
+            }
+
+            function multiply(a,b){
+              result = a * b;
+              return result;  
+            }
+
+            function divide(a,b){
+              if (b == 0){
+                  return NaN;
+              }
+              else {
+              result = a / b;
+              return result;
+              }  
+            }
+
+            function operate(a,b,operator){
+
+              switch (operator){
+                case "+":
+                    return add(a,b);
+                    break;
+                case "-":
+                    return subtract(a,b);
+                    break;
+                case "x":
+                    return multiply(a,b);
+                    break;
+                case "÷":
+                    return divide(a,b);
+                    break;
+                }
+            }
+
+            const numbers = document.querySelectorAll(".number");
+            const sign = document.querySelectorAll(".sign");
+            let display = document.querySelector(".screen h2");
+            let smallDisplay = document.querySelector(".screen h3");
+            let decimal = document.querySelector(".decimal");
+            const clear = document.getElementById("clear");
+            const backSpace = document.getElementById("delete");
+            const equal = document.getElementById("equal");
+            let checkEqual = 0;
+            let againEqual = 0;
+            let result;
+            let operator;
+
+            numbers.forEach((button) => {
+                button.addEventListener("click", (e) => {
+                    
+                    if (display.textContent == "0"){
+                        display.textContent = button.textContent;
+                    }
+                    else if (display.textContent == "+" || display.textContent == "-" || display.textContent == "x" || display.textContent == "÷"){
+                        display.textContent = button.textContent;   
+                    }
+                    else{
+                        display.textContent += button.textContent;
+                    }
+                });
+            });
+
+            sign.forEach((button) => {
+                button.addEventListener("click", (e) => {
+                    if (display.textContent != "+" && display.textContent != "-" && display.textContent != "x" && display.textContent != "÷"){ 
+                        if (checkEqual == 1){
+                            smallDisplay.textContent = display.textContent + button.textContent;
+                            display.textContent = button.textContent;
+                            checkEqual = 0;
+                            againEqual = 0;
+                        }
+                        else {
+                        smallDisplay.textContent += display.textContent + button.textContent;
+                        display.textContent = button.textContent;
+                    }
+                }
+            });
+        });
+
+            decimal.addEventListener("click", (e) => {
+                let decimalCheck = display.textContent.split("");
+                if (decimalCheck.indexOf(".") < 0 && display.textContent != "+" && display.textContent != "-" && display.textContent != "x" && display.textContent != "÷"){
+                    display.textContent += ".";
+                }
+                else if (display.textContent == "+" || display.textContent == "-" || display.textContent == "x" || display.textContent == "÷"){
+                    display.textContent = ".";
+                }
+            });
+
+            clear.addEventListener("click", () => {
+                display.textContent = 0;
+                smallDisplay.textContent = "";
+            });
+
+            backSpace.addEventListener("click", () => {
+                display.textContent = display.textContent.slice(0,-1);
+                if (display.textContent == ""){
+                smallDisplay.textContent = smallDisplay.textContent.slice(0,-1);
+                }
+            });
+
+            window.addEventListener("keydown", function(e){
+                const key = document.querySelector(`button[data-key="${e.key}"]`);
+                key.click();
+                key.classList.add("playing");
+                setTimeout(RemoveClass, 100);
+            	function RemoveClass() {
+		        key.classList.remove('playing');
+                }
+            });
+
+            equal.addEventListener("click", equate);
+            
+            function equate(){
+                checkEqual = 1;
+                if (againEqual == 0){
+                if (display.textContent == "+" || display.textContent == "-" || display.textContent == "x" || display.textContent == "÷"){
+                    smallDisplay.textContent = "";
+                    display.textContent = "Invalid expression";
+                }
+                else{
+                let num = (smallDisplay.textContent + display.textContent).split(/[-+x÷]/);
+                let sign = (smallDisplay.textContent + display.textContent).match(/[-+x÷]/g);
+                let j = 1;
+                let expression = num;
+                for (let i = 0;i<sign.length;i++){
+                    expression.splice(j,0,sign[i]);
+                    j = j+2;
+                }
+                let operationResult = 0;
+                let k = 0; //index of operator
+                while(expression.includes("÷") || expression.includes("x") || expression.includes("+") || expression.includes("-")){
+                    if (expression.indexOf("÷")>=0){
+                        k = expression.indexOf("÷");
+                        operationResult = operate(expression[k-1],expression[k+1],expression[k]);
+                        expression.splice(k-1,3,operationResult);
+                    }
+                    else if (expression.indexOf("x")>=0){
+                        k = expression.indexOf("x");
+                        operationResult = operate(expression[k-1],expression[k+1],expression[k]);
+                        expression.splice(k-1,3,operationResult);
+                    }
+                    else if (expression.indexOf("-")>=0){
+                        k = expression.indexOf("-");
+                        operationResult = operate(expression[k-1],expression[k+1],expression[k]);
+                        expression.splice(k-1,3,operationResult);
+                    }
+                    else if (expression.indexOf("+")>=0){
+                        k = expression.indexOf("+");
+                        operationResult = operate(expression[k-1],expression[k+1],expression[k]);
+                        expression.splice(k-1,3,operationResult);
+                    }
+                }
+                if (isNaN(expression)){
+                    smallDisplay.textContent = "";
+                    display.textContent = "Don't divide by zero";
+                }
+                else{
+                smallDisplay.textContent = smallDisplay.textContent + display.textContent;
+                display.textContent = `${Math.round(expression * 1000)/1000}`;
+                againEqual = 1;
+                }
+            }
+        }
+    }
+
+        </script>
+    </body>
+</html>
